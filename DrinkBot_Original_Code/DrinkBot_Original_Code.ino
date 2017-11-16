@@ -25,13 +25,13 @@ const int CokeZero = 5; //(pump4)to pump Coke Zero connected to pin 5
 const int Tonic = 6; //(pump5)to pump Tonic Water connected to pin 6
 const int OrangeJuice = 7; //(pump6) to pump Orange Juice connected to pin 7
 
-// I'll set the LED pin numbers later
-//#define LED8 8 // (pump1)LED to tell rum is pumping
-//#define LED9 9 // (pump2)LED to tell gin is pumping
-//#define LED10 10 // (pump3)LED to tell vodka is pumping
-//#define LED11 11 // (pump4)LED to tell CokeZero is pumping
-//#define LED12 12 // (pump5)LED to tell Tonic Water is pumping
-//#define LED12 12 // (pump6)LED to tell OrangeJuice is pumping
+// Pin Numbers for LEDs
+const int ledRum = A5;
+const int ledGin = A4;
+const int ledVodka = A3;
+const int ledCoke = A2;
+const int ledTonic = A1;
+const int ledOJ = A0;
 
 //Pin Numbers for Buttons
 const int buttonRC = 8; // pin 8 is button for Rum and Coke
@@ -88,12 +88,14 @@ pinMode(CokeZero, OUTPUT);
 pinMode(Tonic, OUTPUT);
 pinMode(OrangeJuice, OUTPUT);
 
-//I will initialize LED (analog) pins later
-//pinMode(LED8, OUTPUT);
-//pinMode(LED9, OUTPUT);
-//pinMode(LED10, OUTPUT);
-//pinMode(LED11, OUTPUT);
-//pinMode(LED12, OUTPUT);
+//Initialize LED pins as outputs
+pinMode(ledRum, OUTPUT);
+pinMode(ledGin, OUTPUT);
+pinMode(ledVodka, OUTPUT);
+pinMode(ledCoke, OUTPUT);
+pinMode(ledTonic, OUTPUT);
+pinMode(ledOJ, OUTPUT);
+
 
 //initialize button pins as inputs
 pinMode(buttonRC, INPUT);
@@ -104,12 +106,21 @@ pinMode(buttonVOJ, INPUT);
 pinMode(buttonGOJ, INPUT);
 pinMode(buttonGT, INPUT);
 
+//set buttons to pull downs
+digitalWrite(buttonRC, HIGH);
+digitalWrite(buttonROJ, HIGH);
+digitalWrite(buttonVC, HIGH);
+digitalWrite(buttonVOJ, HIGH);
+digitalWrite(buttonGOJ, HIGH);
+digitalWrite(buttonGT, HIGH);
+
 //Turn LEDs Off
-//digitalWrite (LED8, LOW); //led 1 on
-//digitalWrite (LED9, LOW);
-//digitalWrite (LED10, LOW);
-//digitalWrite (LED11, LOW);
-//digitalWrite (LED12, LOW);
+analogWrite (ledRum, 0);
+analogWrite (ledGin, 0);
+analogWrite (ledVodka, 0);
+analogWrite (ledCoke, 0);
+analogWrite (ledTonic, 0);
+analogWrite (ledOJ, 0);
 
 //Turn pumps off
 digitalWrite (Rum, HIGH); //pump 1 off
@@ -150,37 +161,37 @@ Serial.print("Gin & Tonic Button (button6): ");
 Serial.println(buttonStateGT);
 delay(500);
 
-if (buttonStateRC == HIGH, buttonStateROJ == HIGH,
-buttonStateVC == HIGH, buttonStateVOJ == HIGH,
-buttonStateGOJ == HIGH, buttonStateGT == HIGH){
+if (buttonStateRC == HIGH && buttonStateROJ == HIGH &&
+buttonStateVC == HIGH && buttonStateVOJ == HIGH &&
+buttonStateGOJ == HIGH && buttonStateGT == HIGH){
   //This will be an LED strobe pattern when I have programmed LEDs
   delay(500);
   }
 
-else if(buttonStateROJ == HIGH,
-buttonStateVC == HIGH, buttonStateVOJ == HIGH,
-buttonStateGOJ == HIGH, buttonStateGT == HIGH, buttonStateRC == LOW){
+else if(buttonStateROJ == HIGH &&
+buttonStateVC == HIGH && buttonStateVOJ == HIGH &&
+buttonStateGOJ == HIGH && buttonStateGT == HIGH && buttonStateRC == LOW){
   makeRumCoke();
   resetButtonsHigh();
 }
 
-else if (buttonStateRC == HIGH, buttonStateROJ == LOW,
-buttonStateVC == HIGH, buttonStateVOJ == HIGH,
-buttonStateGOJ == HIGH, buttonStateGT == HIGH){
+else if (buttonStateRC == HIGH && buttonStateROJ == LOW &&
+buttonStateVC == HIGH && buttonStateVOJ == HIGH &&
+buttonStateGOJ == HIGH && buttonStateGT == HIGH){
   makeRumOrangeJuice();
   resetButtonsHigh();
 }
 
-else if (buttonStateRC == HIGH, buttonStateROJ == HIGH,
-buttonStateVC == LOW, buttonStateVOJ == HIGH,
-buttonStateGOJ == HIGH, buttonStateGT == HIGH) {
+else if (buttonStateRC == HIGH && buttonStateROJ == HIGH &&
+buttonStateVC == LOW && buttonStateVOJ == HIGH &&
+buttonStateGOJ == HIGH && buttonStateGT == HIGH) {
   makeVodkaCoke();
   resetButtonsHigh();
 }
 
-else if (buttonStateRC == HIGH, buttonStateROJ == HIGH,
-buttonStateVC == HIGH, buttonStateVOJ == LOW,
-buttonStateGOJ == HIGH, buttonStateGT == HIGH){
+else if (buttonStateRC == HIGH && buttonStateROJ == HIGH &&
+buttonStateVC == HIGH && buttonStateVOJ == LOW &&
+buttonStateGOJ == HIGH && buttonStateGT == HIGH){
   makeVodkaOrangeJuice();
   resetButtonsHigh();
 }
@@ -191,17 +202,17 @@ buttonStateGOJ == HIGH, buttonStateGT == HIGH){
 //  makeVodkaTonic();
 //}
 
-else if (buttonStateRC == HIGH, buttonStateROJ == HIGH,
-buttonStateVC == HIGH, buttonStateVOJ == HIGH, 
-buttonStateGT == HIGH, buttonStateGOJ == LOW) {
+else if (buttonStateRC == HIGH && buttonStateROJ == HIGH &&
+buttonStateVC == HIGH && buttonStateVOJ == HIGH && 
+buttonStateGT == HIGH && buttonStateGOJ == LOW) {
   makeGinOrangeJuice();
   resetButtonsHigh();
  
 }
 
-else if (buttonStateRC == HIGH, buttonStateROJ == HIGH,
-buttonStateVC == HIGH, buttonStateVOJ == HIGH, 
-buttonStateGOJ == HIGH, buttonStateGT == LOW) {
+else if (buttonStateRC == HIGH && buttonStateROJ == HIGH &&
+buttonStateVC == HIGH && buttonStateVOJ == HIGH && 
+buttonStateGOJ == HIGH && buttonStateGT == LOW) {
   makeGinTonic();
   resetButtonsHigh();
 }
@@ -316,49 +327,53 @@ buttonStateGOJ == HIGH, buttonStateGT == LOW) {
 void makeRumCoke(){
   digitalWrite(Rum, LOW); // turn on pump 1
   digitalWrite(CokeZero, LOW); // turn on pump 4
-      // later -- Add LEDs to show pumps 1 and 4 are on
+    analogWrite(ledRum, 255);
+    analogWrite(ledCoke, 255);
   delay(8000); // wait 8 seconds
   digitalWrite(Rum, HIGH); // turn off pump 1
-      // later -- Turn off pump 1 LED 
+    analogWrite(ledRum, 0);
   delay(22000); // wait 22 seconds
   digitalWrite(CokeZero, HIGH); // turn off pump 4
-      //later -- Turn off pump 4 LED
+    analogWrite(ledCoke, 0);
 }
 
 void makeRumOrangeJuice(){
   digitalWrite(Rum, LOW); // turn on pump 1
   digitalWrite(OrangeJuice, LOW); // turn on pump 6
-      // later -- Add LEDs to show pumps 1 and 6 are on
+    analogWrite(ledRum, 255);
+    analogWrite(ledOJ, 255);
   delay(8000); // wait 8 seconds
   digitalWrite(Rum, HIGH); // turn off pump 1
-      // later -- Turn off pump 1 LED 
+      analogWrite(ledRum, 0); 
   delay(22000); // wait 22 seconds
   digitalWrite(OrangeJuice, HIGH); // turn off pump 6
-      //later -- Turn off pump 6 LED
+      analogWrite(ledOJ, 0);
 }
 
 void makeVodkaCoke(){
   digitalWrite(Vodka, LOW); // turn on pump 3
   digitalWrite(CokeZero, LOW); // turn on pump 4
-      // later -- Add LEDs to show pumps 3 and 4 are on
+    analogWrite(ledVodka, 255);
+    analogWrite(ledCoke, 255);
   delay(8000); // wait 8 seconds
   digitalWrite(Vodka, HIGH); // turn off pump 3
-      // later -- Turn off pump 3 LED 
+    analogWrite(ledVodka, 0);
   delay(22000); // wait 22 seconds
   digitalWrite(CokeZero, HIGH); // turn off pump 4
-      //later -- Turn off pump 4 LED
+    analogWrite(ledCoke, 0);
 }
 
 void makeVodkaOrangeJuice(){
   digitalWrite(Vodka, LOW); // turn on pump 3
   digitalWrite(OrangeJuice, LOW); // turn on pump 6
-      // later -- Add LEDs to show pumps 3 and 6 are on
+    analogWrite(ledVodka, 255);
+    analogWrite(ledOJ, 255);
   delay(8000); // wait 8 seconds
   digitalWrite(Vodka, HIGH); // turn off pump 3
-      // later -- Turn off pump 3 LED 
+    analogWrite(ledVodka, 0); 
   delay(22000); // wait 22 seconds
   digitalWrite(OrangeJuice, HIGH); // turn off pump 6
-      //later -- Turn off pump 6 LED
+    analogWrite(ledOJ, 0);
 }
 
 //void makeVodkaTonic(){
@@ -376,25 +391,27 @@ void makeVodkaOrangeJuice(){
 void makeGinOrangeJuice(){
   digitalWrite(Gin, LOW); // turn on pump 2
   digitalWrite(OrangeJuice, LOW); // turn on pump 6
-      // later -- Add LEDs to show pumps 2 and 6 are on
+    analogWrite(ledGin, 255);
+    analogWrite(ledOJ, 255);
   delay(8000); // wait 8 seconds
   digitalWrite(Gin, HIGH); // turn off pump 2
-      // later -- Turn off pump 2 LED 
+    analogWrite(ledGin, 0); 
   delay(22000); // wait 22 seconds
   digitalWrite(OrangeJuice, HIGH); // turn off pump 6
-      //later -- Turn off pump 6 LED
+    analogWrite(ledOJ, 0);
 }
 
 void makeGinTonic(){
   digitalWrite(Gin, LOW); // turn on pump 2
   digitalWrite(Tonic, LOW); // turn on pump 5
-      // later -- Add LEDs to show pumps 2 and 5 are on
+    analogWrite(ledGin, 255);
+    analogWrite(ledTonic, 255);
   delay(8000); // wait 8 seconds
   digitalWrite(Gin, HIGH); // turn off pump 2
-      // later -- Turn off pump 2 LED 
+    analogWrite(ledGin, 0); 
   delay(22000); // wait 22 seconds
   digitalWrite(Tonic, HIGH); // turn off pump 5
-      //later -- Turn off pump 5 LED
+    analogWrite(ledTonic, 0);
 }
 
 void resetButtonsHigh(){

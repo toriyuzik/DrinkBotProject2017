@@ -14,12 +14,13 @@ This repository includes code and other files for a drink making robot using the
 	
   The original objective of this project was to mix a variety of different highballs (1 oz. of alcohol and 8 oz. of soda/juice). Due to the limitations of the pumps, it takes too long to pump an appropriate amount of carbonated liquid. Due to this set back, the Drinkbot can pump only alcohol and juice. Of the six pumps, four of them pump alcohol and two pump non-carbonated mix. The user can choose to pump only alcohol and manually add soda to their glass. While this was not the original plan for the Drinkbot, it is a satisfactory solution to this problem.
   
-  <img src= "https://drive.google.com/open?id=19eY2khGtEqe2V-wZBLgIp6NAVE6ZOVmHGQ">
+  <img src= "drinkbot_frontview.jpg">
   
 # Repository Contents
-
-  
-  
+* **/DrinkBot_Original_Code** - This is the completed Arduino code for the Drinkbot.
+* **/img** - This is where the image files for this readme are stored.
+* **/LICENSE** - The license file.
+* **/README.md** - The file you're reading now.
   
 Requirements and Materials
 ==================
@@ -49,7 +50,7 @@ Build Instructions
 ==================
 This design was prototyped without the pumps and power supply using an Arduino, a breadboard, the relay board, the buttons, and the LEDs. This was done to ensure the code worked properly and the Arduino was properly connected to the rest of the elements. In the original prototype, resistors were used in the button circuits. The creator later decided to eliminate these resistors and used the code to set the buttons as pull-down buttons. Photos of the prototypes can be viewed below:
 
-  <img src= "https://drive.google.com/open?id=1KU0cTkFUCUXqKDT-K42tT-cL3cNhKJGuKw">
+  <img src= "buttons_prototype.jpg">
 	
   The frame was constructed using the pieces of a ready-to-assemble shoe shelf. The sides and the top of the shelf were assembled as per the instructions included in the package. The top of the shelf is the bottom of the project frame. The remaining shelf was cut into three pieces (one half, and two quarters). The largest piece was attached to the back of the shelf about 2 inches from the bottom. One of the smaller pieces was attached in front of the bottles about 1 inch from the bottom. The other smaller piece was attached about 4 inches in front of the bottles at the top of the shelf. Six evenly spaced holes were drilled in this piece for the LEDs. The peristaltic pumps were also attached to this piece above each of the LED holes. After the frame was assembled, the Arduino Uno and the relay board were attached at the bottom near the front of the shelf. A piece of cardboard was later added on top of these electronic components.
 	

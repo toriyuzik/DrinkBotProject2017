@@ -164,7 +164,74 @@ delay(500);
 if (buttonStateRC == HIGH && buttonStateROJ == HIGH &&
 buttonStateVC == HIGH && buttonStateVOJ == HIGH &&
 buttonStateGOJ == HIGH && buttonStateGT == HIGH){
-  //This will be an LED strobe pattern when I have programmed LEDs
+  analogWrite (ledRum, 255);
+  delay(100);
+  analogWrite (ledGin, 255);
+  delay(100);
+  analogWrite (ledVodka, 255);
+  delay(100);
+  analogWrite (ledCoke, 255);
+  delay(100);
+  analogWrite (ledTonic, 255);
+  delay(100);
+  analogWrite (ledOJ, 255);
+  delay(100);
+  analogWrite (ledOJ, 0);
+  delay(100);
+  analogWrite (ledTonic, 0);
+  delay(100);
+  analogWrite (ledCoke, 0);
+  delay(100);
+  analogWrite (ledVodka, 0);
+  delay(100);
+  analogWrite (ledGin, 0);
+  delay(100);
+  analogWrite (ledRum, 0);
+  delay(100);
+
+  analogWrite (ledRum, 255);
+  analogWrite (ledGin, 255);
+  analogWrite (ledVodka, 255);
+  analogWrite (ledCoke, 255);
+  analogWrite (ledTonic, 255);
+  analogWrite (ledOJ, 255);  
+  delay(500);
+  analogWrite (ledRum, 0);
+  analogWrite (ledGin, 0);
+  analogWrite (ledVodka, 0);
+  analogWrite (ledCoke, 0);
+  analogWrite (ledTonic, 0);
+  analogWrite (ledOJ, 0);
+  delay(500);
+
+  analogWrite (ledRum, 255);
+  analogWrite (ledGin, 255);
+  analogWrite (ledVodka, 255);
+  analogWrite (ledCoke, 255);
+  analogWrite (ledTonic, 255);
+  analogWrite (ledOJ, 255);  
+  delay(500);
+  analogWrite (ledRum, 0);
+  analogWrite (ledGin, 0);
+  analogWrite (ledVodka, 0);
+  analogWrite (ledCoke, 0);
+  analogWrite (ledTonic, 0);
+  analogWrite (ledOJ, 0);
+  delay(500);
+
+  analogWrite (ledRum, 255);
+  analogWrite (ledGin, 255);
+  analogWrite (ledVodka, 255);
+  analogWrite (ledCoke, 255);
+  analogWrite (ledTonic, 255);
+  analogWrite (ledOJ, 255);  
+  delay(500);
+  analogWrite (ledRum, 0);
+  analogWrite (ledGin, 0);
+  analogWrite (ledVodka, 0);
+  analogWrite (ledCoke, 0);
+  analogWrite (ledTonic, 0);
+  analogWrite (ledOJ, 0);
   delay(500);
   }
 
@@ -329,10 +396,10 @@ void makeRumCoke(){
   digitalWrite(CokeZero, LOW); // turn on pump 4
     analogWrite(ledRum, 255);
     analogWrite(ledCoke, 255);
-  delay(8000); // wait 8 seconds
+  delay(32000); // wait 32 seconds
   digitalWrite(Rum, HIGH); // turn off pump 1
     analogWrite(ledRum, 0);
-  delay(22000); // wait 22 seconds
+  delay(118000); // wait 22 seconds
   digitalWrite(CokeZero, HIGH); // turn off pump 4
     analogWrite(ledCoke, 0);
 }
@@ -342,10 +409,10 @@ void makeRumOrangeJuice(){
   digitalWrite(OrangeJuice, LOW); // turn on pump 6
     analogWrite(ledRum, 255);
     analogWrite(ledOJ, 255);
-  delay(8000); // wait 8 seconds
+  delay(32000); // wait 32 seconds
   digitalWrite(Rum, HIGH); // turn off pump 1
       analogWrite(ledRum, 0); 
-  delay(22000); // wait 22 seconds
+  delay(118000); // wait 22 seconds
   digitalWrite(OrangeJuice, HIGH); // turn off pump 6
       analogWrite(ledOJ, 0);
 }
@@ -355,10 +422,10 @@ void makeVodkaCoke(){
   digitalWrite(CokeZero, LOW); // turn on pump 4
     analogWrite(ledVodka, 255);
     analogWrite(ledCoke, 255);
-  delay(8000); // wait 8 seconds
+  delay(32000); // wait 32 seconds
   digitalWrite(Vodka, HIGH); // turn off pump 3
     analogWrite(ledVodka, 0);
-  delay(22000); // wait 22 seconds
+  delay(118000); // wait 22 seconds
   digitalWrite(CokeZero, HIGH); // turn off pump 4
     analogWrite(ledCoke, 0);
 }
@@ -368,10 +435,10 @@ void makeVodkaOrangeJuice(){
   digitalWrite(OrangeJuice, LOW); // turn on pump 6
     analogWrite(ledVodka, 255);
     analogWrite(ledOJ, 255);
-  delay(8000); // wait 8 seconds
+  delay(32000); // wait 32 seconds
   digitalWrite(Vodka, HIGH); // turn off pump 3
     analogWrite(ledVodka, 0); 
-  delay(22000); // wait 22 seconds
+  delay(118000); // wait 22 seconds
   digitalWrite(OrangeJuice, HIGH); // turn off pump 6
     analogWrite(ledOJ, 0);
 }
@@ -393,10 +460,10 @@ void makeGinOrangeJuice(){
   digitalWrite(OrangeJuice, LOW); // turn on pump 6
     analogWrite(ledGin, 255);
     analogWrite(ledOJ, 255);
-  delay(8000); // wait 8 seconds
+  delay(32000); // wait 32 seconds
   digitalWrite(Gin, HIGH); // turn off pump 2
     analogWrite(ledGin, 0); 
-  delay(22000); // wait 22 seconds
+  delay(118000); // wait 22 seconds
   digitalWrite(OrangeJuice, HIGH); // turn off pump 6
     analogWrite(ledOJ, 0);
 }
@@ -406,10 +473,10 @@ void makeGinTonic(){
   digitalWrite(Tonic, LOW); // turn on pump 5
     analogWrite(ledGin, 255);
     analogWrite(ledTonic, 255);
-  delay(8000); // wait 8 seconds
+  delay(32000); // wait 32 seconds
   digitalWrite(Gin, HIGH); // turn off pump 2
     analogWrite(ledGin, 0); 
-  delay(22000); // wait 22 seconds
+  delay(237000); // wait 237 seconds
   digitalWrite(Tonic, HIGH); // turn off pump 5
     analogWrite(ledTonic, 0);
 }

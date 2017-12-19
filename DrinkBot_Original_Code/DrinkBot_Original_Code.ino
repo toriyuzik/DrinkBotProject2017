@@ -21,61 +21,46 @@
 const int Rum = 2; //(pump1)12VDC motor to pump rum on pin 2
 const int Gin = 3; //(pump2)to pump gin connected to pin 3
 const int Vodka = 4; //(pump3)to pump vodka connected to pin 4
-const int CokeZero = 5; //(pump4)to pump Coke Zero connected to pin 5
-const int Tonic = 6; //(pump5)to pump Tonic Water connected to pin 6
-const int OrangeJuice = 7; //(pump6) to pump Orange Juice connected to pin 7
+const int Whiskey = 5; //(pump4)to pump Coke Zero connected to pin 5
+const int OrangeJuice = 6; //(pump5)to pump Tonic Water connected to pin 6
+const int CranJuice = 7; //(pump6) to pump Orange Juice connected to pin 7
 
 // Pin Numbers for LEDs
 const int ledRum = A5;
 const int ledGin = A4;
 const int ledVodka = A3;
-const int ledCoke = A2;
-const int ledTonic = A1;
-const int ledOJ = A0;
+const int ledWhisk = A2;
+const int ledOJ = A1;
+const int ledCran = A0;
 
 //Pin Numbers for Buttons
-const int buttonRC = 8; // pin 8 is button for Rum and Coke
 const int buttonROJ = 9; // pin 9 is button for Rum and Orange Juice
+const int buttonRum = 8; // pin 8 is button for Rum
+const int buttonVodka = 9; // pin 9 is button for Vodka
+const int buttonGin = 10; // pin 10 is button for Gin
+const int buttonWhisk = 11; // pin 11 is button for Whiskey
 
-const int buttonVC = 10; // pin 10 is button for Vodka and Coke
-const int buttonVOJ = 11; // pin 11 is button for Vodka and Orange Juice
-//const int buttonVT = 12; // Vodka Tonic is no longer an option
-
-const int buttonGOJ = 12; // pin 12 is button for Gin and Orange Juice
-const int buttonGT = 13; // pin 13 is button for Gin and Tonic
+const int buttonOJ = 12; // pin 12 is button for Orange Juice
+const int buttonCran = 13; // pin 13 is button for Cranberry Juice
 
 //Declare button states as variables
-int buttonStateRC = 0;
-int buttonStateROJ = 0;
+int buttonStateRum = 0;
+int buttonStateVodka = 0;
+int buttonStateGin = 0;
+int buttonStateWhisk = 0;
 
-int buttonStateVC = 0;
-int buttonStateVOJ = 0;
-//int buttonStateVT = 0;
-
-int buttonStateGOJ = 0;
-int buttonStateGT = 0;
+int buttonStateOJ = 0;
+int buttonStateCran = 0;
 
 //Declare Functions to Mix Drinks
-void makeRumCoke();
-void makeRumOrangeJuice();
-void makeVodkaCoke();
-void makeVodkaOrangeJuice();
-//void makeVodkaTonic();
-void makeGinOrangeJuice();
-void makeGinTonic();
-
-//Declare function to strobe LEDs
-//void strobePattern();
-
+void makeRum();
+void makeVodka();
+void makeGin();
+void makeWhisk();
+void makeCran();
+void makeOJ();
+//Declare Function to Reset Buttons to High
 void resetButtonsHigh();
-
-
-//int strobe=100; // this controls how fast the LEDs will blink in line
-//
-//int sensorPin = A0; // analog read : used to tell if doorbell switch is pushed
-//
-//int sensorValue = 0;  //value written to when analog value is read from doorbell
-
 
 void setup(){
 Serial.begin(9600);
@@ -84,103 +69,126 @@ Serial.begin(9600);
 pinMode(Rum, OUTPUT);
 pinMode(Gin, OUTPUT);
 pinMode(Vodka, OUTPUT);
-pinMode(CokeZero, OUTPUT);
-pinMode(Tonic, OUTPUT);
+pinMode(Whiskey, OUTPUT);
+pinMode(CranJuice, OUTPUT);
 pinMode(OrangeJuice, OUTPUT);
 
 //Initialize LED pins as outputs
 pinMode(ledRum, OUTPUT);
 pinMode(ledGin, OUTPUT);
 pinMode(ledVodka, OUTPUT);
-pinMode(ledCoke, OUTPUT);
-pinMode(ledTonic, OUTPUT);
+pinMode(ledWhisk, OUTPUT);
 pinMode(ledOJ, OUTPUT);
+pinMode(ledCran, OUTPUT);
 
 
 //initialize button pins as inputs
-pinMode(buttonRC, INPUT);
-pinMode(buttonROJ, INPUT);
-pinMode(buttonVC, INPUT);
-pinMode(buttonVOJ, INPUT);
-//pinMode(buttonVT, INPUT);
-pinMode(buttonGOJ, INPUT);
-pinMode(buttonGT, INPUT);
+pinMode(buttonRum, INPUT);
+pinMode(buttonVodka, INPUT);
+pinMode(buttonGin, INPUT);
+pinMode(buttonWhisk, INPUT);
+pinMode(buttonOJ, INPUT);
+pinMode(buttonCran, INPUT);
 
 //set buttons to pull downs
-digitalWrite(buttonRC, HIGH);
-digitalWrite(buttonROJ, HIGH);
-digitalWrite(buttonVC, HIGH);
-digitalWrite(buttonVOJ, HIGH);
-digitalWrite(buttonGOJ, HIGH);
-digitalWrite(buttonGT, HIGH);
+digitalWrite(buttonRum, HIGH);
+digitalWrite(buttonVodka, HIGH);
+digitalWrite(buttonGin, HIGH);
+digitalWrite(buttonWhisk, HIGH);
+digitalWrite(buttonOJ, HIGH);
+digitalWrite(buttonCran, HIGH);
 
 //Turn LEDs Off
 analogWrite (ledRum, 0);
 analogWrite (ledGin, 0);
 analogWrite (ledVodka, 0);
-analogWrite (ledCoke, 0);
-analogWrite (ledTonic, 0);
+analogWrite (ledWhisk, 0);
 analogWrite (ledOJ, 0);
+analogWrite (ledCran, 0);
 
 //Turn pumps off
 digitalWrite (Rum, HIGH); //pump 1 off
 digitalWrite (Gin, HIGH); //pump 2 off
 digitalWrite (Vodka, HIGH); //pump 3 off
-digitalWrite (CokeZero, HIGH); //pump 4 off
-digitalWrite (Tonic, HIGH);//pump 5 off
-digitalWrite (OrangeJuice, HIGH);//pump 6 off
+digitalWrite (Whiskey, HIGH); //pump 4 off
+digitalWrite (OrangeJuice, HIGH);//pump 5 off
+digitalWrite (CranJuice, HIGH);//pump 6 off
 
 delay(1000); // let relays settle down before running the first time.
 
+//Prime Pumps and Turn On LEDs
+digitalWrite (Rum, LOW); //pump 1 prime
+  analogWrite (ledRum, 255);
+digitalWrite (Gin, LOW); //pump 2 prime
+  analogWrite (ledGin, 255);
+digitalWrite (Vodka, LOW); //pump 3 prime
+  analogWrite (ledVodka, 255);
+digitalWrite (Whiskey, LOW); //pump 4 prime
+  analogWrite (ledWhisk, 255);
+digitalWrite (OrangeJuice, LOW);//pump 5 prime
+  analogWrite (ledOJ, 255);
+digitalWrite (CranJuice, LOW);//pump 6 prime
+  analogWrite (ledCran, 255);
+delay (15000); //wait 15 seconds
+//Turn pumps and LEDs Off
+digitalWrite (Rum, HIGH); //pump 1 prime
+  analogWrite (ledRum, 0);
+digitalWrite (Gin, HIGH); //pump 2 prime
+  analogWrite (ledGin, 0);
+digitalWrite (Vodka, HIGH); //pump 3 prime
+  analogWrite (ledVodka, 0);
+digitalWrite (Whiskey, HIGH); //pump 4 prime
+  analogWrite (ledWhisk, 0);
+digitalWrite (OrangeJuice, HIGH);//pump 5 prime
+  analogWrite (ledOJ, 0);
+digitalWrite (CranJuice, HIGH);//pump 6 prime
+  analogWrite (ledCran, 0);
 }
 
 void loop(){   //this part of the code loops and loops forever
 
 //read the state of the pushbutton value
-buttonStateRC = digitalRead(buttonRC);
-buttonStateROJ = digitalRead(buttonROJ);
-buttonStateVC = digitalRead(buttonVC);
-buttonStateVOJ = digitalRead(buttonVOJ);
-//buttonStateVT = digitalRead(buttonVT);
-buttonStateGOJ = digitalRead(buttonGOJ);
-buttonStateGT = digitalRead(buttonGT);
+buttonStateRum = digitalRead(buttonRum);
+buttonStateVodka = digitalRead(buttonVodka);
+buttonStateGin = digitalRead(buttonGin);
+buttonStateWhisk = digitalRead(buttonWhisk);
+buttonStateOJ = digitalRead(buttonOJ);
+buttonStateCran = digitalRead(buttonCran);
 
-Serial.print("Rum & Coke Button (button1): ");
-Serial.println(buttonStateRC);
-Serial.print("Rum & OJ Button (button2): ");
-Serial.println(buttonStateROJ);
-Serial.print("Vodka & Coke Button (button3): ");
-Serial.println(buttonStateVC);
-Serial.print("Vodka & OJ Button (button4): ");
-Serial.println(buttonStateVOJ);
-//Serial.print("Vodka & Tonic Button: ");
-//Serial.println(buttonStateVT);
-Serial.print("Gin & OJ Button (button5): ");
-Serial.println(buttonStateGOJ);
-Serial.print("Gin & Tonic Button (button6): ");
-Serial.println(buttonStateGT);
+Serial.print("Rum Button (button1): ");
+Serial.println(buttonStateRum);
+Serial.print("Vodka Button (button2): ");
+Serial.println(buttonStateVodka);
+Serial.print("Gin Button (button3): ");
+Serial.println(buttonStateGin);
+Serial.print("Whiskey Button (button4): ");
+Serial.println(buttonStateWhisk);
+Serial.print("OJ Button (button5): ");
+Serial.println(buttonStateOJ);
+Serial.print("Cranberry Juice Button (button6): ");
+Serial.println(buttonStateCran);
 delay(500);
 
-if (buttonStateRC == HIGH && buttonStateROJ == HIGH &&
-buttonStateVC == HIGH && buttonStateVOJ == HIGH &&
-buttonStateGOJ == HIGH && buttonStateGT == HIGH){
+if (buttonStateRum == HIGH && buttonStateVodka == HIGH &&
+buttonStateGin == HIGH && buttonStateWhisk == HIGH &&
+buttonStateOJ == HIGH && buttonStateCran == HIGH){
   analogWrite (ledRum, 255);
   delay(100);
   analogWrite (ledGin, 255);
   delay(100);
   analogWrite (ledVodka, 255);
   delay(100);
-  analogWrite (ledCoke, 255);
-  delay(100);
-  analogWrite (ledTonic, 255);
+  analogWrite (ledWhisk, 255);
   delay(100);
   analogWrite (ledOJ, 255);
   delay(100);
+  analogWrite (ledCran, 255);
+  delay(100);
+  analogWrite (ledCran, 0);
+  delay(100);
   analogWrite (ledOJ, 0);
   delay(100);
-  analogWrite (ledTonic, 0);
-  delay(100);
-  analogWrite (ledCoke, 0);
+  analogWrite (ledWhisk, 0);
   delay(100);
   analogWrite (ledVodka, 0);
   delay(100);
@@ -192,303 +200,146 @@ buttonStateGOJ == HIGH && buttonStateGT == HIGH){
   analogWrite (ledRum, 255);
   analogWrite (ledGin, 255);
   analogWrite (ledVodka, 255);
-  analogWrite (ledCoke, 255);
-  analogWrite (ledTonic, 255);
-  analogWrite (ledOJ, 255);  
+  analogWrite (ledWhisk, 255);
+  analogWrite (ledOJ, 255);
+  analogWrite (ledCran, 255);  
   delay(500);
   analogWrite (ledRum, 0);
   analogWrite (ledGin, 0);
   analogWrite (ledVodka, 0);
-  analogWrite (ledCoke, 0);
-  analogWrite (ledTonic, 0);
+  analogWrite (ledWhisk, 0);
   analogWrite (ledOJ, 0);
+  analogWrite (ledCran, 0);
   delay(500);
 
   analogWrite (ledRum, 255);
   analogWrite (ledGin, 255);
   analogWrite (ledVodka, 255);
-  analogWrite (ledCoke, 255);
-  analogWrite (ledTonic, 255);
-  analogWrite (ledOJ, 255);  
+  analogWrite (ledWhisk, 255);
+  analogWrite (ledOJ, 255);
+  analogWrite (ledCran, 255);  
   delay(500);
   analogWrite (ledRum, 0);
   analogWrite (ledGin, 0);
   analogWrite (ledVodka, 0);
-  analogWrite (ledCoke, 0);
-  analogWrite (ledTonic, 0);
+  analogWrite (ledWhisk, 0);
   analogWrite (ledOJ, 0);
+  analogWrite (ledCran, 0);
   delay(500);
 
   analogWrite (ledRum, 255);
   analogWrite (ledGin, 255);
   analogWrite (ledVodka, 255);
-  analogWrite (ledCoke, 255);
-  analogWrite (ledTonic, 255);
-  analogWrite (ledOJ, 255);  
+  analogWrite (ledWhisk, 255);
+  analogWrite (ledOJ, 255);
+  analogWrite (ledCran, 255);  
   delay(500);
   analogWrite (ledRum, 0);
   analogWrite (ledGin, 0);
   analogWrite (ledVodka, 0);
-  analogWrite (ledCoke, 0);
-  analogWrite (ledTonic, 0);
+  analogWrite (ledWhisk, 0);
   analogWrite (ledOJ, 0);
+  analogWrite (ledCran, 0);
   delay(500);
   }
 
-else if(buttonStateROJ == HIGH &&
-buttonStateVC == HIGH && buttonStateVOJ == HIGH &&
-buttonStateGOJ == HIGH && buttonStateGT == HIGH && buttonStateRC == LOW){
-  makeRumCoke();
+else if(buttonStateGin == HIGH &&
+buttonStateVodka == HIGH && buttonStateWhisk == HIGH &&
+buttonStateOJ == HIGH && buttonStateCran == HIGH && buttonStateRum == LOW){
+  makeRum();
   resetButtonsHigh();
 }
 
-else if (buttonStateRC == HIGH && buttonStateROJ == LOW &&
-buttonStateVC == HIGH && buttonStateVOJ == HIGH &&
-buttonStateGOJ == HIGH && buttonStateGT == HIGH){
-  makeRumOrangeJuice();
+else if (buttonStateRum == HIGH && buttonStateVodka == LOW &&
+buttonStateGin == HIGH && buttonStateWhisk == HIGH &&
+buttonStateOJ == HIGH && buttonStateCran == HIGH){
+  makeVodka();
   resetButtonsHigh();
 }
 
-else if (buttonStateRC == HIGH && buttonStateROJ == HIGH &&
-buttonStateVC == LOW && buttonStateVOJ == HIGH &&
-buttonStateGOJ == HIGH && buttonStateGT == HIGH) {
-  makeVodkaCoke();
+else if (buttonStateRum == HIGH && buttonStateVodka == HIGH &&
+buttonStateGin == LOW && buttonStateWhisk == HIGH &&
+buttonStateOJ == HIGH && buttonStateCran == HIGH) {
+  makeGin();
   resetButtonsHigh();
 }
 
-else if (buttonStateRC == HIGH && buttonStateROJ == HIGH &&
-buttonStateVC == HIGH && buttonStateVOJ == LOW &&
-buttonStateGOJ == HIGH && buttonStateGT == HIGH){
-  makeVodkaOrangeJuice();
+else if (buttonStateRum == HIGH && buttonStateVodka == HIGH &&
+buttonStateGin == HIGH && buttonStateWhisk == LOW &&
+buttonStateOJ == HIGH && buttonStateCran == HIGH){
+  makeWhisk();
   resetButtonsHigh();
 }
 
-//else if (buttonStateRC == HIGH, buttonStateROJ == HIGH,
-//buttonStateVC == HIGH, buttonStateVOJ == HIGH, 
-//buttonStateGOJ == HIGH, buttonStateGT == HIGH) {
-//  makeVodkaTonic();
-//}
-
-else if (buttonStateRC == HIGH && buttonStateROJ == HIGH &&
-buttonStateVC == HIGH && buttonStateVOJ == HIGH && 
-buttonStateGT == HIGH && buttonStateGOJ == LOW) {
-  makeGinOrangeJuice();
+else if (buttonStateRum == HIGH && buttonStateVodka == HIGH &&
+buttonStateGin == HIGH && buttonStateWhisk == HIGH && 
+buttonStateOJ == HIGH && buttonStateCran == LOW) {
+  makeCran();
   resetButtonsHigh();
  
 }
 
-else if (buttonStateRC == HIGH && buttonStateROJ == HIGH &&
-buttonStateVC == HIGH && buttonStateVOJ == HIGH && 
-buttonStateGOJ == HIGH && buttonStateGT == LOW) {
-  makeGinTonic();
+else if (buttonStateRum == HIGH && buttonStateVodka == HIGH &&
+buttonStateGin == HIGH && buttonStateWhisk == HIGH && 
+buttonStateCran == HIGH && buttonStateOJ == LOW) {
+  makeOJ();
   resetButtonsHigh();
+  }
 }
 
-//sensorValue = analogRead(sensorPin);
-
-//this part makes the LEDs strobe to make the robot look cool
-
-//this stops when the start button is pressed
-
-//if bottom is pressed the LEDs show which motor is running
-
-//digitalWrite (LED8, HIGH); //turns on LED on pin 8
-//
-//delay(strobe);         // controls how fast the LEDs flash
-//
-//digitalWrite (LED8, LOW); //turns off LED on pin 8
-//
-//delay(strobe);
-//
-//digitalWrite (LED9, HIGH); //turns on LED on pin 9
-//
-//delay(strobe);
-//
-//digitalWrite (LED9, LOW); //turns off LED on pin 9
-//
-//delay(strobe);
-//
-//digitalWrite (LED10, HIGH); //turns on LED on pin 10
-//
-//delay(strobe);
-//
-//digitalWrite (LED10, LOW); //turns off LED on pin 10
-//
-//delay(strobe);
-//
-//digitalWrite (LED11, HIGH); //turns on LED on pin 11
-//
-//delay(strobe);
-//
-//digitalWrite (LED11, LOW); //turns off LED on pin 11
-//
-//delay(strobe);
-//
-//digitalWrite (LED12, HIGH); //turns on LED on pin 12
-//
-//delay(strobe);
-//
-//digitalWrite (LED12, LOW); //turns off LED on pin 12
-//
-//delay(strobe);
-
-//      sensorValue = analogRead(sensorPin);
-//      
-//      if(sensorValue < 300){
-//      
-//        Serial.print (sensorValue);
-//      
-//      digitalWrite (LED8, HIGH); //led 1 on
-//      
-//      digitalWrite (Rum, LOW); //pump 1 on
-//      
-//      digitalWrite (LED9, HIGH);
-//      
-//      digitalWrite (Curacao, LOW); //pump 2 on
-//      
-//      digitalWrite (LED10, HIGH);
-//      
-//      digitalWrite (Orgeat, LOW); //pump 3 on
-//      
-//      digitalWrite (LED11, HIGH);
-//      
-//      digitalWrite (Grenedine, LOW);//pump 4 on
-//      
-//      delay(8000);       // waits 8 sec to pump 1/4 oz of liquid
-//      
-//      digitalWrite (LED10, LOW); // turns off Orgeat LED P3
-//      
-//      digitalWrite (Orgeat, HIGH);   // turns off Orgeat pump P3
-//      
-//      digitalWrite (LED11, LOW);   //led for pump 5 off
-//      
-//      digitalWrite (Grenedine, HIGH); //turns off pimp 4
-//      
-//      delay(8000);     // waits 8 sec to pump 1/4 oz of liquid
-//      
-//      digitalWrite (Curacao, HIGH);   // turns off Curacao pump 2
-//      
-//      digitalWrite (LED9, LOW); // turns off Curacao LED 2
-
-//        // at this point the Curacao has been on for 16 sec and has pumped 1/2 oz
-//        
-//        delay(16000);   // waits 8 sec to pump 1/4 oz of liquid
-//        
-//        digitalWrite (LED8, LOW); //turns off pump 1 LED
-//        
-//        digitalWrite (Rum, HIGH);   //turns off pump 1 (RUM)
-//        
-//        digitalWrite (pump6, LOW);   //turn on pineapple pump (pump6)
-//        
-//        //digitalWrite (PineLime, LOW); //low turns on relays to turn on pump
-//        
-//        delay(2500); //delay 4 seconds to pump pineapple juice
-//        
-//        digitalWrite (pump6, HIGH);     // turn off pineapple pump (pump6)
-//        
-//        //digitalWrite (PineLime, HIGH); // turns off relays to pineapple juice
-
-//}
-}
-
-void makeRumCoke(){
+void makeRum(){
   digitalWrite(Rum, LOW); // turn on pump 1
-  digitalWrite(CokeZero, LOW); // turn on pump 4
     analogWrite(ledRum, 255);
-    analogWrite(ledCoke, 255);
   delay(32000); // wait 32 seconds
   digitalWrite(Rum, HIGH); // turn off pump 1
     analogWrite(ledRum, 0);
-  delay(118000); // wait 22 seconds
-  digitalWrite(CokeZero, HIGH); // turn off pump 4
-    analogWrite(ledCoke, 0);
 }
 
-void makeRumOrangeJuice(){
-  digitalWrite(Rum, LOW); // turn on pump 1
-  digitalWrite(OrangeJuice, LOW); // turn on pump 6
-    analogWrite(ledRum, 255);
-    analogWrite(ledOJ, 255);
-  delay(32000); // wait 32 seconds
-  digitalWrite(Rum, HIGH); // turn off pump 1
-      analogWrite(ledRum, 0); 
-  delay(118000); // wait 22 seconds
-  digitalWrite(OrangeJuice, HIGH); // turn off pump 6
-      analogWrite(ledOJ, 0);
-}
-
-void makeVodkaCoke(){
+void makeVodka(){
   digitalWrite(Vodka, LOW); // turn on pump 3
-  digitalWrite(CokeZero, LOW); // turn on pump 4
     analogWrite(ledVodka, 255);
-    analogWrite(ledCoke, 255);
   delay(32000); // wait 32 seconds
   digitalWrite(Vodka, HIGH); // turn off pump 3
     analogWrite(ledVodka, 0);
-  delay(118000); // wait 22 seconds
-  digitalWrite(CokeZero, HIGH); // turn off pump 4
-    analogWrite(ledCoke, 0);
 }
 
-void makeVodkaOrangeJuice(){
-  digitalWrite(Vodka, LOW); // turn on pump 3
-  digitalWrite(OrangeJuice, LOW); // turn on pump 6
-    analogWrite(ledVodka, 255);
-    analogWrite(ledOJ, 255);
-  delay(32000); // wait 32 seconds
-  digitalWrite(Vodka, HIGH); // turn off pump 3
-    analogWrite(ledVodka, 0); 
-  delay(118000); // wait 22 seconds
-  digitalWrite(OrangeJuice, HIGH); // turn off pump 6
-    analogWrite(ledOJ, 0);
-}
-
-//void makeVodkaTonic(){
-//  digitalWrite(Vodka, LOW); // turn on pump 3
-//  digitalWrite(Tonic, LOW); // turn on pump 5
-//      // later -- Add LEDs to show pumps 3 and 5 are on
-//  delay(8000); // wait 8 seconds
-//  digitalWrite(Vodka, HIGH); // turn off pump 3
-//      // later -- Turn off pump 3 LED 
-//  delay(22000); // wait 22 seconds
-//  digitalWrite(Tonic, HIGH); // turn off pump 5
-//      //later -- Turn off pump 5 LED
-//}
-
-void makeGinOrangeJuice(){
+void makeGin(){
   digitalWrite(Gin, LOW); // turn on pump 2
-  digitalWrite(OrangeJuice, LOW); // turn on pump 6
     analogWrite(ledGin, 255);
-    analogWrite(ledOJ, 255);
   delay(32000); // wait 32 seconds
   digitalWrite(Gin, HIGH); // turn off pump 2
-    analogWrite(ledGin, 0); 
-  delay(118000); // wait 22 seconds
-  digitalWrite(OrangeJuice, HIGH); // turn off pump 6
-    analogWrite(ledOJ, 0);
+    analogWrite(ledGin, 0);
 }
 
-void makeGinTonic(){
-  digitalWrite(Gin, LOW); // turn on pump 2
-  digitalWrite(Tonic, LOW); // turn on pump 5
-    analogWrite(ledGin, 255);
-    analogWrite(ledTonic, 255);
+void makeWhisk(){
+  digitalWrite(Whiskey, LOW); // turn on pump 4
+    analogWrite(ledWhisk, 255);
   delay(32000); // wait 32 seconds
-  digitalWrite(Gin, HIGH); // turn off pump 2
-    analogWrite(ledGin, 0); 
+  digitalWrite(Whiskey, HIGH); // turn off pump 4
+    analogWrite(ledWhisk, 0); 
+}
+
+void makeOrangeJuice(){
+  digitalWrite(OrangeJuice, LOW); // turn on pump 5
+    analogWrite(ledOJ, 255);
   delay(237000); // wait 237 seconds
-  digitalWrite(Tonic, HIGH); // turn off pump 5
-    analogWrite(ledTonic, 0);
+  digitalWrite(OrangeJuice, HIGH); // turn off pump 5
+    analogWrite(ledOJ, 0);
+}
+void makeCran(){
+  digitalWrite(CranJuice, LOW); // turn on pump 6
+    analogWrite(ledCran, 255);
+  delay(237000); // wait 237 seconds
+  digitalWrite(CranJuice, HIGH); // turn off pump 6
+    analogWrite(ledCran, 0);
 }
 
 void resetButtonsHigh(){
-  digitalWrite (buttonRC, HIGH); //button1
-  digitalWrite (buttonROJ, HIGH); //button2
-  digitalWrite (buttonVC, HIGH); //button3
-  digitalWrite (buttonVOJ, HIGH); //button4
-  digitalWrite (buttonGOJ, HIGH); //button5
-  digitalWrite (buttonGT, HIGH); //button6
+  digitalWrite (buttonRum, HIGH); //button1
+  digitalWrite (buttonVodka, HIGH); //button2
+  digitalWrite (buttonGin, HIGH); //button3
+  digitalWrite (buttonWhisk, HIGH); //button4
+  digitalWrite (buttonOJ, HIGH); //button5
+  digitalWrite (buttonCran, HIGH); //button6
 }
-
-    // Later -- write strobe pattern function (or use the one Ted used)
 

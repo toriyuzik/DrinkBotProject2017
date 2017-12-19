@@ -12,7 +12,7 @@
 *This code was editted by Tori Yuzik
 *to create a variety of 7 different highballs
 *modified 05 November 2017
-*last modified 08 November 2017
+*last modified 18 December 2017
 
 *12 v DC motors pump 1 oz of liquor in 32 sec.
 
